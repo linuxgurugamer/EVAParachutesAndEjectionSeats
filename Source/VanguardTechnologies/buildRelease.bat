@@ -24,16 +24,20 @@ set HOMEDRIVE=%HOMEDIR:~0,2%
 type EVAParachutesAndEjectionSeats.version
 set /p VERSION= "Enter version: "
 
+rd /s %HOMEDIR%\install\GameData\VanguardTechnologies
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Parts
 
 copy /Y "%~dp0bin\Debug\VanguardTechnologies.dll"  %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts"
+rd /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\VNG_Eject"
+rd /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\squareChute"
+
 copy /Y "EVAParachutesAndEjectionSeats.version" "%HOMEDIR%\install\GameData\VanguardTechnologies"
 
 copy /Y "..\..\License.txt" "%HOMEDIR%\install\GameData\VanguardTechnologies"
-copy /Y "..\..\README.md" "%HOMEDIR%\install\GameData\VanguardTechnologies"
+copy /Y "README.md" "%HOMEDIR%\install\GameData\VanguardTechnologies"
 copy /Y MiniAVC.dll  "%HOMEDIR%\install\GameData\VanguardTechnologies"
 
 %HOMEDRIVE%

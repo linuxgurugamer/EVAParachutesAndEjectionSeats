@@ -123,6 +123,7 @@ namespace VanguardTechnologies
                                 mkkp.minAirPressureToOpen = mkep.minAirPressureToOpen;
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
+//                                mkkp.chuteDir = mkep.arrChuteDir[mkep.selectedChute];
                                 //Log.Info("mkkp.deployedDrag: " + mkkp.deployedDrag.ToString() + "   mkep.deployedDrag: " + mkep.deployedDrag.ToString());
                                 //Log.Info("mkkp.minAirPressureToOpen: " + mkkp.minAirPressureToOpen.ToString() + "   mkep.minAirPressureToOpen: " + mkep.minAirPressureToOpen.ToString());
                                 //Log.Info("mkkp.semiDeployedFraction: " + mkkp.semiDeployedFraction.ToString() + "   mkep.semiDeployedFraction: " + mkep.semiDeployedFraction.ToString());
@@ -216,6 +217,17 @@ namespace VanguardTechnologies
         [KSPField]
         public float deployTime = .33f;
 
+#if false
+        [KSPField(isPersistant = true)]
+        public int selectedChute = -1;
+
+        [KSPField(guiActiveEditor = true, guiActive = false, guiName = "ChuteSwitcher", isPersistant = true)]
+        [UI_ChooseOption(affectSymCounterparts = UI_Scene.Editor, scene = UI_Scene.All, suppressEditorShipModified = false, display = new string[] { "None" })]
+        public string ChooseOption = "0";
+        private string[] Chutes;
+        BaseField chooseChute;
+#endif
+
         //private ProtoCrewMember kerbal;
         private bool ejecting = false;
 
@@ -226,6 +238,48 @@ namespace VanguardTechnologies
             part.SendEvent("OnDeboardSeat");
             Log.Info("Eject Crew");
         }
+
+#if false
+        string[] arrChuteNames = new string[2] { "Round", "Square" };
+        public string[] arrChuteDir = new string[2] { "roundChute", "squareChute" };
+
+        void Start()
+        {
+            SetupGUI();
+        }
+        private void SetupGUI()
+        {
+            Log.Info("SetupGUI");
+            //Update the gui
+            chooseChute = Fields[nameof(ChooseOption)];
+            chooseChute.guiName = "Chute";     //Dummy name until updated
+            chooseChute.guiActiveEditor = true;
+            chooseChute.guiActive = false;
+
+            //Create array Options that are simple ref's to the propellant list
+            Chutes = new string[arrChuteNames.Length];
+            for (int i = 0; i < arrChuteNames.Length; i++)
+            {
+                Chutes[i] = i.ToString();
+            }
+
+            //Set which function run's when changing selection, which options, and the text to display
+            //var chooseOption = chooseField.uiControlEditor as UI_ChooseOption;
+            UI_ChooseOption chooseOption =  chooseChute.uiControlEditor as UI_ChooseOption;
+            chooseOption.options = Chutes;
+            chooseOption.display = arrChuteNames;        //Should be GUInames array
+            chooseOption.onFieldChanged = selectChute;
+        }
+        //onFieldChanged action
+        private void selectChute(BaseField field, object oldValueObj)
+        {
+            selectedChute = int.Parse(ChooseOption);
+            Log.Info("selectedChute: " + selectedChute.ToString());
+           // updateIntake(true);
+        }
+
+#endif
+
 
         int getNumSeats()
         {

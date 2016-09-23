@@ -19,6 +19,7 @@ namespace VanguardTechnologies
         int waitBeforeCheckingSrvVel = 0;
         int deployDelay = 0;
         double deployAfter = 0.0;
+        public string chuteDir = "parachute";
 
         Vessel origVessel;
         float minVerticalSpeed = -1;
@@ -83,8 +84,8 @@ namespace VanguardTechnologies
             if (!chute)
             {
                 Log.Info("CreateChuteModel, Found, name: " + this.vessel.name);
-                Log.Info("exists: " + GameDatabase.Instance.ExistsModel("VNG/parachute/model"));
-                chute = GameDatabase.Instance.GetModel("VNG/parachute/model");
+                Log.Info("exists: " + GameDatabase.Instance.ExistsModel("VanguardTechnologies/Parts/" + chuteDir + "/model"));
+                chute = GameDatabase.Instance.GetModel("VanguardTechnologies/Parts/" + chuteDir + "/model");
                 chute.SetActive(true);
                 chute.transform.parent = transform;//vessel.transform.Find("globalMove01/joints01/bn_spA01/bn_spB01/bn_spc01/bn_spD01/bn_jetpack01");
                 chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f); //new Vector3(0, 0.1f, 0);
@@ -134,7 +135,7 @@ namespace VanguardTechnologies
                 chuteState = fullyDeployed ? "fully deployed" : "semi-deployed";
             }
 
-            if (!fullyDeployed)
+            if (!fullyDeployed && chute != null)
             {
                 // if (GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
                 if (vessel.altitude < 100 || (vessel.heightFromTerrain < 100 && vessel.heightFromTerrain != 1))
