@@ -79,6 +79,9 @@
     <None Include="EVAParachutesAndEjectionSeats.version" />
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Changelog.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>start /D D:\Users\jbb\github\EVAParachutesAndEjectionSeats\Source\VanguardTechnologies  /WAIT deploy.bat

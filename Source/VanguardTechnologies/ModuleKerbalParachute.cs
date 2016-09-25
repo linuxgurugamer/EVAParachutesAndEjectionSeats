@@ -80,6 +80,7 @@ namespace VanguardTechnologies
 
         private void CreateChuteModel()
         {
+            Log.Info("CreateChuteModel: " + chuteDir);
             time = (float)Planetarium.GetUniversalTime();
             if (!chute)
             {

@@ -14,17 +14,46 @@ namespace VanguardTechnologies
         Vessel vessel = null;
         const float DELAY = 3.0f;
 
-
-
         bool allSpawned = true;
         Vessel ejectedKerbal = null;
         float ejectionForce = 1000;
         float distance;
         Vessel origVessel;
 
+
+
+        public string ejectionSoundFile = "VanguardTechnologies/Sounds/ejectionSound";
+
+        public float ejectionVolume = 1f;
+
+        public FXGroup EjectionSound = null;
+        private float soundPitch = 1;
+        private float soundVolume = 0;
+
+
+
         void Start()
         {
             Instance = this;
+
+            {
+                EjectionSound = new FXGroup("ejectionSound");
+
+                if (EjectionSound != null)
+                {
+
+                    EjectionSound.audio = this.gameObject.AddComponent<AudioSource>();
+                    EjectionSound.audio.dopplerLevel = 0f;
+                    EjectionSound.audio.Stop();
+                    
+                    EjectionSound.audio.loop = false;
+
+                    //EjectionSound.audio.time = EjectionSound.audio.clip.length;
+                }
+                else
+                    Debug.LogError("DoEjections: Sound FXGroup not found.");
+
+            }
         }
 
         public void SetVessel(Vessel v)
@@ -123,7 +152,9 @@ namespace VanguardTechnologies
                                 mkkp.minAirPressureToOpen = mkep.minAirPressureToOpen;
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
-//                                mkkp.chuteDir = mkep.arrChuteDir[mkep.selectedChute];
+                                Log.Info("mkep.selectedChute: " + mkep.selectedChute.ToString());
+                                if (mkep.selectedChute >= 0 && mkep.selectedChute < mkep.arrChuteDir.Length)
+                                    mkkp.chuteDir = mkep.arrChuteDir[mkep.selectedChute];
                                 //Log.Info("mkkp.deployedDrag: " + mkkp.deployedDrag.ToString() + "   mkep.deployedDrag: " + mkep.deployedDrag.ToString());
                                 //Log.Info("mkkp.minAirPressureToOpen: " + mkkp.minAirPressureToOpen.ToString() + "   mkep.minAirPressureToOpen: " + mkep.minAirPressureToOpen.ToString());
                                 //Log.Info("mkkp.semiDeployedFraction: " + mkkp.semiDeployedFraction.ToString() + "   mkep.semiDeployedFraction: " + mkep.semiDeployedFraction.ToString());
@@ -132,6 +163,31 @@ namespace VanguardTechnologies
                                 mkkp.DeployWhenAble(PartModule.StartState.Flying, origVessel, FlightGlobals.Vessels[i].rootPart.name);
                                 ejectedKerbal = FlightGlobals.Vessels[i];
                                 distance = Vector3.Distance(ejectedKerbal.rootPart.transform.position, origVessel.rootPart.transform.position);
+
+                                if (EjectionSound != null)
+                                {
+                                    if (!GameDatabase.Instance.ExistsAudioClip(ejectionSoundFile))
+                                    {
+                                        Debug.LogError("DoEjections: Audio file not found: " + ejectionSoundFile);
+
+                                    }
+                                    else
+                                    {
+                                        EjectionSound.audio.clip = GameDatabase.Instance.GetAudioClip(ejectionSoundFile);
+                                        soundVolume = GameSettings.SHIP_VOLUME * ejectionVolume;
+                                        //soundPitch = Mathf.Lerp(0.5f, 1f, 1f);
+                                        soundPitch = 1f;
+                                        EjectionSound.audio.pitch = soundPitch;
+                                        EjectionSound.audio.volume = mkep.Volume;
+                                        //RcsSound.audio.loop = true;
+
+                                        EjectionSound.audio.PlayOneShot(EjectionSound.audio.clip);
+                                        // if (!RcsSound.audio.isPlaying)
+                                        //RcsSound.audio.Play();
+                                    }
+                                   
+                                }
+
                                 return;
                             }
                         }
@@ -160,7 +216,7 @@ namespace VanguardTechnologies
                         direction.Normalize();
 
                         ejectedKerbal.rootPart.AddForce(direction * ejectionForce);
-
+                       // RcsSound.audio.loop = false;
                         if (distance * 2 < Vector3.Distance(ejectedKerbal.rootPart.transform.position, origVessel.rootPart.transform.position))
                             ejectedKerbal = null;
 #else
@@ -217,9 +273,17 @@ namespace VanguardTechnologies
         [KSPField]
         public float deployTime = .33f;
 
-#if false
+        [KSPField]
+        public string SoundFile = "VanguardTechnologies/Sounds/ejectionSound";
+
+        [KSPField]
+        public float Volume = 1f;
+
+
+
+#if true
         [KSPField(isPersistant = true)]
-        public int selectedChute = -1;
+        public int selectedChute = 0;
 
         [KSPField(guiActiveEditor = true, guiActive = false, guiName = "ChuteSwitcher", isPersistant = true)]
         [UI_ChooseOption(affectSymCounterparts = UI_Scene.Editor, scene = UI_Scene.All, suppressEditorShipModified = false, display = new string[] { "None" })]
@@ -239,7 +303,7 @@ namespace VanguardTechnologies
             Log.Info("Eject Crew");
         }
 
-#if false
+#if true
         string[] arrChuteNames = new string[2] { "Round", "Square" };
         public string[] arrChuteDir = new string[2] { "roundChute", "squareChute" };
 
@@ -247,6 +311,7 @@ namespace VanguardTechnologies
         {
             SetupGUI();
         }
+
         private void SetupGUI()
         {
             Log.Info("SetupGUI");
@@ -289,7 +354,7 @@ namespace VanguardTechnologies
                 cnt = maxUses;
             } else
                 cnt = System.Math.Min(this.part.parent.CrewCapacity, maxUses);
-            Log.Info("Ejector Cnt: " + cnt.ToString());
+            //Log.Info("Ejector Cnt: " + cnt.ToString());
             return cnt;
 #if false
             int cnt = 0;

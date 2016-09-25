@@ -28,11 +28,14 @@ rd /s %HOMEDIR%\install\GameData\VanguardTechnologies
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Parts
+mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Sounds
 
 copy /Y "%~dp0bin\Debug\VanguardTechnologies.dll"  %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts"
+
+xcopy /y /s "%~dp0..\..\GameData\VNG\Sounds" "%HOMEDIR%\install\GameData\VanguardTechnologies\Sounds"
+
 rd /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\VNG_Eject"
-rd /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\squareChute"
 
 copy /Y "EVAParachutesAndEjectionSeats.version" "%HOMEDIR%\install\GameData\VanguardTechnologies"
 
