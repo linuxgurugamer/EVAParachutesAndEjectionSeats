@@ -17,6 +17,7 @@ namespace VanguardTechnologies
         bool allSpawned = true;
         Vessel ejectedKerbal = null;
         float ejectionForce = 1000;
+        int forceCnt = 60;
         float distance;
         Vessel origVessel;
 
@@ -96,6 +97,7 @@ namespace VanguardTechnologies
                                 ejectorFound = true;
                                 mkep.maxUses--;
                                 ejectionForce = mkep.ejectionForce;
+                                forceCnt = 60;
                                 Log.Info("Max uses: " + mkep.maxUses.ToString() + "   EjectionForce: " + ejectionForce.ToString());
                                 break;
                             }
@@ -215,7 +217,10 @@ namespace VanguardTechnologies
                         Vector3 direction = ejectedKerbal.rootPart.transform.position - origVessel.rootPart.transform.position;
                         direction.Normalize();
 
-                        ejectedKerbal.rootPart.AddForce(direction * ejectionForce);
+                        if (ejectionForce > 0)
+                            ejectedKerbal.rootPart.AddForce(direction * ejectionForce);
+                        if (forceCnt-- < 0)
+                        ejectionForce = 0;
                        // RcsSound.audio.loop = false;
                         if (distance * 2 < Vector3.Distance(ejectedKerbal.rootPart.transform.position, origVessel.rootPart.transform.position))
                             ejectedKerbal = null;
@@ -303,9 +308,9 @@ namespace VanguardTechnologies
             Log.Info("Eject Crew");
         }
 
-#if true
-        string[] arrChuteNames = new string[2] { "Round", "Square" };
-        public string[] arrChuteDir = new string[2] { "roundChute", "squareChute" };
+
+        string[] arrChuteNames = new string[7] { "Round", "Square", "Round 2", "Round 3", "Square 2", "Square 3", "Square 4" };
+        public string[] arrChuteDir = new string[7] { "roundChute", "squareChute", "roundChute2", "roundChute3", "squareChute2", "squareChute3", "squareChute4" };
 
         void Start()
         {
@@ -342,8 +347,6 @@ namespace VanguardTechnologies
             Log.Info("selectedChute: " + selectedChute.ToString());
            // updateIntake(true);
         }
-
-#endif
 
 
         int getNumSeats()

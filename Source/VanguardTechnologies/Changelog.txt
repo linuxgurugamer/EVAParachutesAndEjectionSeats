@@ -8,3 +8,15 @@
 
 0.1.2
 	Multiple chutes added
+
+0.1.2.1
+	Recompiled for 1540
+
+0.1.3
+	Fixed bug where a single kerbal ejected would have ejection force continully.  Added when I added the sound effects
+
+0.1.3.1
+	Recompiled for 1553
+
+0.1.4
+	Added 5 more parachute options contributed by SpannerMonkey
