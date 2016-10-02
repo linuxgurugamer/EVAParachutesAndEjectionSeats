@@ -20,3 +20,6 @@
 
 0.1.4
 	Added 5 more parachute options contributed by SpannerMonkey
+
+0.1.5
+	Fixed the manual trigger of the chutes:  EVA_Use + EVA_Jump (on Windows, space+Fkey)

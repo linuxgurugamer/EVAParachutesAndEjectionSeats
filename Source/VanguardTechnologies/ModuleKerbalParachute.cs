@@ -20,6 +20,8 @@ namespace VanguardTechnologies
         int deployDelay = 0;
         double deployAfter = 0.0;
         public string chuteDir = "parachute";
+        public bool parasail = false;
+        public Rigidbody rigidbody;
 
         Vessel origVessel;
         float minVerticalSpeed = -1;
@@ -47,7 +49,7 @@ namespace VanguardTechnologies
             Log.Info("EVA parachute fully deployed");
             CreateChuteModel();
             fullyDeployed = true;
-            waitBeforeCheckingSrvVel = 5;
+            waitBeforeCheckingSrvVel = 30;
             targetSize = new Vector3(1, 1, 1);
         }
 
@@ -63,7 +65,7 @@ namespace VanguardTechnologies
             Log.Info("EVA parachute semi-deployed");
             CreateChuteModel();
             fullyDeployed = false;
-            waitBeforeCheckingSrvVel = 5;
+            waitBeforeCheckingSrvVel = 500;
             targetSize = new Vector3(semiDeployedFraction, semiDeployedFraction, semiDeployedHeight);
         }
 
@@ -88,9 +90,12 @@ namespace VanguardTechnologies
                 Log.Info("exists: " + GameDatabase.Instance.ExistsModel("VanguardTechnologies/Parts/" + chuteDir + "/model"));
                 chute = GameDatabase.Instance.GetModel("VanguardTechnologies/Parts/" + chuteDir + "/model");
                 chute.SetActive(true);
+                this.rigidbody = GetComponent<Rigidbody>();
+                //this.GetComponentCached(ref this.rigidbody);
+
                 chute.transform.parent = transform;//vessel.transform.Find("globalMove01/joints01/bn_spA01/bn_spB01/bn_spc01/bn_spD01/bn_jetpack01");
                 chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f); //new Vector3(0, 0.1f, 0);
-                chute.transform.localScale = new Vector3(0, 0, 0);
+                chute.transform.localScale = new Vector3(0, 0,0);
             }
             lastSize = chute.transform.localScale;
         }
@@ -136,9 +141,13 @@ namespace VanguardTechnologies
                 chuteState = fullyDeployed ? "fully deployed" : "semi-deployed";
             }
 
+            if (!chute && GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
+            {
+                Log.Info("EVA_Use & EVA_Jump");
+                DeploySemi();
+            }
             if (!fullyDeployed && chute != null)
             {
-                // if (GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
                 if (vessel.altitude < 100 || (vessel.heightFromTerrain < 100 && vessel.heightFromTerrain != 1))
                     DeployFully();
                 else DeploySemi();
@@ -150,8 +159,47 @@ namespace VanguardTechnologies
                     chute.transform.localScale = Vector3.Lerp(lastSize, targetSize, t);
                 else
                     chute.transform.localScale = targetSize;
+                part.maximum_drag = chute.transform.localScale.x * chute.transform.localScale.y * deployedDrag*0.8f;
+#if false
+                
 
-                part.maximum_drag = chute.transform.localScale.x * chute.transform.localScale.y * deployedDrag;
+                Vector3 direction = vessel.transform.up;
+                //direction.Normalize();
+
+                //this.rigidbody.AddRelativeForce(direction );
+                this.rigidbody.AddForceAtPosition( direction * part.maximum_drag, vessel.transform.position + chute.transform.localPosition);
+                part.maximum_drag = 0;
+
+
+#endif
+#if false
+                // Vector3 velocity = vessel.rootPart.Rigidbody.velocity + Krakensbane.GetFrameVelocityV3f();
+                //Log.Info("velocity: " + velocity.ToString());
+                //Log.Info("deployedDrag: " + deployedDrag.ToString());
+                // velocity = this.part.Rigidbody.velocity ;
+                //this.sqrSpeed = velocity.sqrMagnitude;
+                //Vector3 dragVector = -velocity.normalized;
+
+                if (parasail)
+                {
+                    Vector3 dragVector = vessel.transform.forward;
+                    Log.Info("dragVector: " + dragVector.ToString());
+                    Vector3 dragForce = deployedDrag / 2 * dragVector * semiDeployedFraction;
+                    vessel.rootPart.Rigidbody.AddForceAtPosition(dragForce / 8, this.part.transform.position);
+
+                    Vector3 fromPosition = chute.transform.position;
+                    Quaternion fromRotation = chute.transform.rotation;
+
+                    //  chute.transform.position = Vector3.Lerp(fromPosition, vessel.rootPart.transform.position, 0);
+                    //chute.transform.rotation = vessel.rootPart.transform.rotation;
+
+                    //chute.transform.localRotation = vessel.rootPart.transform.localRotation;
+                   // chute.transform.parent = transform;
+                   // chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f);
+                    //chute.transform.eulerAngles = new Vector3(chute.transform.eulerAngles.x, vessel.rootPart.transform.eulerAngles.y, chute.transform.eulerAngles.z);
+                }
+#endif
+
                 chute.transform.LookAt(vessel.transform.position + vessel.srf_velocity);
 
                 if (vessel.srf_velocity.sqrMagnitude < 0.1 && waitBeforeCheckingSrvVel == 0)

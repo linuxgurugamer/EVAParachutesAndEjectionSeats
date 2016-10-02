@@ -154,9 +154,16 @@ namespace VanguardTechnologies
                                 mkkp.minAirPressureToOpen = mkep.minAirPressureToOpen;
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
+                                
+                                //mkkp.rigidbody = this.
+
                                 Log.Info("mkep.selectedChute: " + mkep.selectedChute.ToString());
                                 if (mkep.selectedChute >= 0 && mkep.selectedChute < mkep.arrChuteDir.Length)
                                     mkkp.chuteDir = mkep.arrChuteDir[mkep.selectedChute];
+
+                                if (mkep.arrChuteDir[mkep.selectedChute] == "squareChute2")
+                                    mkkp.parasail = true;
+
                                 //Log.Info("mkkp.deployedDrag: " + mkkp.deployedDrag.ToString() + "   mkep.deployedDrag: " + mkep.deployedDrag.ToString());
                                 //Log.Info("mkkp.minAirPressureToOpen: " + mkkp.minAirPressureToOpen.ToString() + "   mkep.minAirPressureToOpen: " + mkep.minAirPressureToOpen.ToString());
                                 //Log.Info("mkkp.semiDeployedFraction: " + mkkp.semiDeployedFraction.ToString() + "   mkep.semiDeployedFraction: " + mkep.semiDeployedFraction.ToString());
