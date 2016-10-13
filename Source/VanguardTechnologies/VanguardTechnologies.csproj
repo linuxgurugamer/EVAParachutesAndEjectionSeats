@@ -50,7 +50,6 @@
     <Compile Include="PartManipulation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Refl.cs" />
-    <Compile Include="Tosh_AutoStrut.cs" />
     <Compile Include="Tosh_ShaderReplacer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 * ModuleKrAnimation   *
 * (C) Kreuzung, CC BY *
 \*********************/
-
+#if false
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -186,3 +186,4 @@ namespace VanguardTechnologies
         }
     }
 }
+#endif

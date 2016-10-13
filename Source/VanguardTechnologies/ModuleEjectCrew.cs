@@ -161,7 +161,7 @@ namespace VanguardTechnologies
                                 if (mkep.selectedChute >= 0 && mkep.selectedChute < mkep.arrChuteDir.Length)
                                     mkkp.chuteDir = mkep.arrChuteDir[mkep.selectedChute];
 
-                                if (mkep.arrChuteDir[mkep.selectedChute] == "squareChute2")
+                                if (mkep.arrChuteDir[mkep.selectedChute] == "parasailChute")
                                     mkkp.parasail = true;
 
                                 //Log.Info("mkkp.deployedDrag: " + mkkp.deployedDrag.ToString() + "   mkep.deployedDrag: " + mkep.deployedDrag.ToString());
@@ -285,8 +285,8 @@ namespace VanguardTechnologies
         [KSPField]
         public float deployTime = .33f;
 
-        [KSPField]
-        public string SoundFile = "VanguardTechnologies/Sounds/ejectionSound";
+     //   [KSPField]
+      //  public string SoundFile = "VanguardTechnologies/Sounds/ejectionSound";
 
         [KSPField]
         public float Volume = 1f;
@@ -314,10 +314,11 @@ namespace VanguardTechnologies
             part.SendEvent("OnDeboardSeat");
             Log.Info("Eject Crew");
         }
+        
 
+        string[] arrChuteNames =        new string[7] { "Round",      "Round 2",     "Round 3",     "Parasail",      "Square",      "Square 3",     "Square 4" };
+        public string[] arrChuteDir =   new string[7] { "roundChute", "roundChute2", "roundChute3", "parasailChute", "squareChute", "squareChute3", "squareChute4" };
 
-        string[] arrChuteNames = new string[7] { "Round", "Square", "Round 2", "Round 3", "Square 2", "Square 3", "Square 4" };
-        public string[] arrChuteDir = new string[7] { "roundChute", "squareChute", "roundChute2", "roundChute3", "squareChute2", "squareChute3", "squareChute4" };
 
         void Start()
         {

@@ -7,6 +7,7 @@ using UnityEngine;
 namespace VanguardTechnologies
 {
     public class ModuleKrKerbalParachute : PartModule
+    //    public class ModuleKrKerbalParachute : ModuleParachute
     {
         [KSPField(isPersistant = true)]
         public float deployedDrag = 100, closedDrag, minAirPressureToOpen = 0.01f, semiDeployedFraction = .25f, semiDeployedHeight = 1.25f, deployTime = .33f;
@@ -21,7 +22,7 @@ namespace VanguardTechnologies
         double deployAfter = 0.0;
         public string chuteDir = "parachute";
         public bool parasail = false;
-        public Rigidbody rigidbody;
+        //public Rigidbody rigidbody;
 
         Vessel origVessel;
         float minVerticalSpeed = -1;
@@ -90,17 +91,19 @@ namespace VanguardTechnologies
                 Log.Info("exists: " + GameDatabase.Instance.ExistsModel("VanguardTechnologies/Parts/" + chuteDir + "/model"));
                 chute = GameDatabase.Instance.GetModel("VanguardTechnologies/Parts/" + chuteDir + "/model");
                 chute.SetActive(true);
-                this.rigidbody = GetComponent<Rigidbody>();
+                // this.rigidbody = GetComponent<Rigidbody>();
                 //this.GetComponentCached(ref this.rigidbody);
 
                 chute.transform.parent = transform;//vessel.transform.Find("globalMove01/joints01/bn_spA01/bn_spB01/bn_spc01/bn_spD01/bn_jetpack01");
                 chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f); //new Vector3(0, 0.1f, 0);
-                chute.transform.localScale = new Vector3(0, 0,0);
+                chute.transform.localScale = new Vector3(0, 0, 0);
+
             }
             lastSize = chute.transform.localScale;
         }
 
-
+        //  bool i = false;
+        //  double degree = 0;
         //Log.Info("staticPressureAtm: " + part.staticPressureAtm.ToString() + "  minAirPressureToOpen: " + minAirPressureToOpen.ToString());
         public void FixedUpdate()
         {
@@ -148,7 +151,7 @@ namespace VanguardTechnologies
             }
             if (!fullyDeployed && chute != null)
             {
-                if (vessel.altitude < 100 || (vessel.heightFromTerrain < 100 && vessel.heightFromTerrain != 1))
+                if (vessel.altitude < 200 || (vessel.heightFromTerrain < 200 && vessel.heightFromTerrain != 1))
                     DeployFully();
                 else DeploySemi();
             }
@@ -159,20 +162,39 @@ namespace VanguardTechnologies
                     chute.transform.localScale = Vector3.Lerp(lastSize, targetSize, t);
                 else
                     chute.transform.localScale = targetSize;
-                part.maximum_drag = chute.transform.localScale.x * chute.transform.localScale.y * deployedDrag*0.8f;
-#if false
+
+                //chute.transform.localScale = new Vector3(0.55f, 0.55f, semiDeployedHeight); // test
                 
+                Log.Info("part.mass: " + part.mass.ToString() + "   part.physicsMass:  " + part.physicsMass.ToString());
+                part.maximum_drag = chute.transform.localScale.x * chute.transform.localScale.y * deployedDrag;
+                //                part.minimum_drag = part.maximum_drag;
 
-                Vector3 direction = vessel.transform.up;
-                //direction.Normalize();
+                //                fullyDeployedDrag = 100;
+                //                areaDeployed = 100;
+                //                Deploy();
+                //                deploymentState = deploymentStates.DEPLOYED;
 
-                //this.rigidbody.AddRelativeForce(direction );
-                this.rigidbody.AddForceAtPosition( direction * part.maximum_drag, vessel.transform.position + chute.transform.localPosition);
-                part.maximum_drag = 0;
+                
+                Vector3 skywardsDirection =  -1 *vessel.srf_velocity;
 
+                float force = (float)(FlightGlobals.ActiveVessel.mainBody.GeeASL * 9.81 * part.physicsMass * chute.transform.localScale.x);
+                // Following to smooth the descent speed
+                if (chute.transform.localScale.x == 1)
+                {
+                    if (vessel.srf_velocity.magnitude > 20)
+                        force *= 2;
+                    if (vessel.srf_velocity.magnitude > 5 && vessel.srf_velocity.magnitude <= 20)
+                        force = Mathf.Lerp(force * 2, force, (float)vessel.srf_velocity.magnitude / 15);
+                    if (vessel.srf_velocity.magnitude < 5)
+                        force -= 0.1f;
+                }
+                Log.Info("force: " + force.ToString() + "  FlightGlobals.ActiveVessel.mainBody.GeeASL: " + FlightGlobals.ActiveVessel.mainBody.GeeASL.ToString() + "  part.physicsMass: " + part.physicsMass.ToString() + "  chute.transform.localScale.x: " + chute.transform.localScale.x.ToString());
+                vessel.rootPart.Rigidbody.AddForce(skywardsDirection.normalized * force );
 
-#endif
-#if false
+                Log.Info("maximum_drag: " + part.maximum_drag.ToString() + "   deployedDrag: " + deployedDrag.ToString());
+                Log.Info("parasail: " + parasail.ToString());
+                Log.Info("skywardsDirection: " + skywardsDirection.normalized.ToString());
+#if true
                 // Vector3 velocity = vessel.rootPart.Rigidbody.velocity + Krakensbane.GetFrameVelocityV3f();
                 //Log.Info("velocity: " + velocity.ToString());
                 //Log.Info("deployedDrag: " + deployedDrag.ToString());
@@ -182,25 +204,93 @@ namespace VanguardTechnologies
 
                 if (parasail)
                 {
+                    //if (!i && t > 1)
+                    //{
+                       // chute.transform.Rotate(180 - FlightGlobals.ship_heading, 90, 0, Space.World);
+                    //    i = true;
+                    //}
+                    //degree += 0.5;
+                    //Log.Info("degree: " + degree.ToString());
+                    //chute.transform.Rotate(0, 0, 0, Space.World);
+
                     Vector3 dragVector = vessel.transform.forward;
                     Log.Info("dragVector: " + dragVector.ToString());
-                    Vector3 dragForce = deployedDrag / 2 * dragVector * semiDeployedFraction;
-                    vessel.rootPart.Rigidbody.AddForceAtPosition(dragForce / 8, this.part.transform.position);
+                    Vector3 dragForce = deployedDrag * dragVector * semiDeployedFraction;
+                    vessel.rootPart.Rigidbody.AddForceAtPosition(dragForce / 4, this.part.transform.position);
 
-                    Vector3 fromPosition = chute.transform.position;
-                    Quaternion fromRotation = chute.transform.rotation;
+                    Log.Info("x chute.transform.rotation : " + chute.transform.rotation.ToString());
+                    Log.Info("vessel.transform.rotation : " + vessel.transform.rotation.ToString());
+                    Log.Info("vessel.transform.rotation.x : " + vessel.transform.rotation.x.ToString());
+                    //Quaternion tr = chute.transform.rotation;
+                    //tr.y = chute.transform.rotation.y * 0.9f;
+                    //chute.transform.rotation = tr;
+                    Log.Info("chute.transform.rotation.y : " + chute.transform.rotation.y.ToString());
+                    //chute.transform.RotateAround(chute.transform.position, chute.transform.up, 1);
+                    //chute.transform.Rotate(0, 1, 0, Space.Self);
+
+                    //Vector3 fromPosition = chute.transform.position;
+                    //Quaternion fromRotation = chute.transform.rotation;
 
                     //  chute.transform.position = Vector3.Lerp(fromPosition, vessel.rootPart.transform.position, 0);
                     //chute.transform.rotation = vessel.rootPart.transform.rotation;
 
                     //chute.transform.localRotation = vessel.rootPart.transform.localRotation;
-                   // chute.transform.parent = transform;
-                   // chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f);
+                    // chute.transform.parent = transform;
+                    // chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f);
                     //chute.transform.eulerAngles = new Vector3(chute.transform.eulerAngles.x, vessel.rootPart.transform.eulerAngles.y, chute.transform.eulerAngles.z);
+                //    Quaternion target = Quaternion.identity;
+
+                 //   target = Quaternion.LookRotation(this.vessel.srf_velocity);
+                //    Vector3d relativeTargetFacing = Quaternion.Inverse(this.vessel.transform.rotation)  * Vector3d.forward;
+
+                    // target = Quaternion.AngleAxis(hdgAngle, target * Vector3.up) * target; // heading rotation
+                    // target = Quaternion.AngleAxis(pitchAngle, target * -Vector3.right) * target; // pitch rotation
+
+                    //chute.transform.localRotation = target;
+                  //  chute.transform.rotation = Quaternion.Euler(relativeTargetFacing);
                 }
 #endif
+                //var tt = vessel.transform.TransformDirection(Vector3.forward);
 
-                chute.transform.LookAt(vessel.transform.position + vessel.srf_velocity);
+                Log.Info("Vessel pointing: " + FlightGlobals.ship_heading.ToString());
+                Log.Info("vessel.srf_velocity: " + vessel.srf_velocity.ToString());
+                Log.Info("vessel.srf_velocity.x: " + vessel.srf_velocity.x.ToString());
+                Log.Info("vessel.srf_velocity.y: " + vessel.srf_velocity.y.ToString());
+                Log.Info("vessel.srf_velocity.z: " + vessel.srf_velocity.z.ToString());
+
+
+                if (parasail)
+                {
+                    var s = Vector3.left;
+                    s.x = 0.1f;
+                    s = -1 * s;
+                    //s.x = 0;
+                    //s.z = 0;
+
+
+                    chute.transform.LookAt(chute.transform.position + s);
+
+                    //vessel.rootPart.Rigidbody.AddForceAtPosition(part.maximum_drag  * (chute.transform.position - s), this.part.transform.position);
+                    //chute.transform.RotateAround(chute.transform.position, chute.transform.up, FlightGlobals.ship_heading);
+                    //                chute.transform.LookAt(vessel.transform.position + s);
+                    //  chute.transform.Rotate(0, 0.1f, 0, Space.World);
+                }
+                else
+                {
+                    chute.transform.LookAt(vessel.transform.position + vessel.srf_velocity);
+                }
+
+#if false
+                if (parasail)
+                {
+                    Quaternion tr2 = chute.transform.localRotation;
+                    tr2.z = chute.transform.localRotation.z * FlightGlobals.ship_heading/360;
+
+                    
+                    Vector3d target = Quaternion.AngleAxis(1, Vector3d.up);
+                    chute.transform.localRotation = chute.transform.localRotation + target;
+                }
+#endif
 
                 if (vessel.srf_velocity.sqrMagnitude < 0.1 && waitBeforeCheckingSrvVel == 0)
                 {
@@ -208,8 +298,32 @@ namespace VanguardTechnologies
                     Log.Info("EVA parachute closed, vessel.srf_velocity.sqrMagnitude: " + vessel.srf_velocity.sqrMagnitude.ToString());
                     Destroy(chute);
                 }
+
                 if (waitBeforeCheckingSrvVel > 0) waitBeforeCheckingSrvVel--;
             }
         }
+
+#if false
+        void t()
+        {
+            // Create a triangle and give it a shape
+            GameObject obj3 = new GameObject("Line");
+            greenline = obj3.AddComponent<LineRenderer>();
+            greenline.transform.parent = transform;       //double check that 'transform' is in fact the Kerbal's transform. It seems to be based on your next posts, but the code itself is not clear.
+            greenline.useWorldSpace = true; // true = Stay static on the ground. false = Move with part [b][COLOR="#FF0000"]Worldspace is needed as the line we are drawing will be relative to two separate objects[/COLOR][/b]
+            greenline.material = new Material(Shader.Find("Particles/Additive"));
+            greenline.SetColors(Color.green, Color.green); // Make it green
+            greenline.SetWidth(0, 2); // Make it width 0 at point 0, width 2 at point 1
+            greenline.SetVertexCount(2); // Haven't toyed with this yet [b][COLOR="#FF0000"]this is the number of Vertex's on the line. A straight line will always have 2[/COLOR][/b]
+
+            // Place triangle in the world relative to part that created it (a Kerbal)
+            
+            Vector3 skywardsDirection = Kerbal.body.position - Kerbal.transform.position; //get our vector from the center of the planet we are standing on to the center of our kerbal. Refresh this every frame since it changes when the kerbal moves[/COLOR][/b]
+            greenline.SetPosition(0, Vector3.zero); // Point 0 is located at Kerbal's location, Vector3.zero 
+            greenline.SetPosition(1, 5 * skywardsDirection.normalize); //Point 1 is located 5 meters away in the direction calculated from the center of the planet to our kerbal. Vector3.normalize takes any vector and makes it 1 meter long.[/COLOR][/b]
+
+        }
+#endif
+
     }
 }
