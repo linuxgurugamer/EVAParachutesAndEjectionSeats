@@ -35,9 +35,10 @@ xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%HOMEDIR%\install\GameData\Vanguard
 
 xcopy /y /s "%~dp0..\..\GameData\VNG\Sounds" "%HOMEDIR%\install\GameData\VanguardTechnologies\Sounds"
 
-rd /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\VNG_Eject"
+rd /Q /s "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts\VNG_Eject"
 
 copy /Y "EVAParachutesAndEjectionSeats.version" "%HOMEDIR%\install\GameData\VanguardTechnologies"
+
 
 copy /Y "..\..\License.txt" "%HOMEDIR%\install\GameData\VanguardTechnologies"
 copy /Y "README.md" "%HOMEDIR%\install\GameData\VanguardTechnologies"

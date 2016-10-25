@@ -13,6 +13,7 @@ namespace VanguardTechnologies
         public float deployedDrag = 100, closedDrag, minAirPressureToOpen = 0.01f, semiDeployedFraction = .25f, semiDeployedHeight = 1.25f, deployTime = .33f;
 
         public bool fullyDeployed = false;
+        bool deployed = false;
         private GameObject chute;
         Vector3 targetSize, lastSize;
         float time;
@@ -50,6 +51,7 @@ namespace VanguardTechnologies
             Log.Info("EVA parachute fully deployed");
             CreateChuteModel();
             fullyDeployed = true;
+            deployed = true;
             waitBeforeCheckingSrvVel = 30;
             targetSize = new Vector3(1, 1, 1);
         }
@@ -66,6 +68,7 @@ namespace VanguardTechnologies
             Log.Info("EVA parachute semi-deployed");
             CreateChuteModel();
             fullyDeployed = false;
+            deployed = true;
             waitBeforeCheckingSrvVel = 500;
             targetSize = new Vector3(semiDeployedFraction, semiDeployedFraction, semiDeployedHeight);
         }
@@ -107,7 +110,7 @@ namespace VanguardTechnologies
         //Log.Info("staticPressureAtm: " + part.staticPressureAtm.ToString() + "  minAirPressureToOpen: " + minAirPressureToOpen.ToString());
         public void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight) return;
+            if (!HighLogic.LoadedSceneIsFlight || !deployed) return;
 
             // Once the vertical speed has been reached, set it to 0 so we don't keep the rest from working
             if (vessel.verticalSpeed > minVerticalSpeed)
