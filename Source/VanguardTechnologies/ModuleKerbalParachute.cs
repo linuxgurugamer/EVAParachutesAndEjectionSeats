@@ -13,7 +13,7 @@ namespace VanguardTechnologies
         public float deployedDrag = 100, closedDrag, minAirPressureToOpen = 0.01f, semiDeployedFraction = .25f, semiDeployedHeight = 1.25f, deployTime = .33f;
 
         public bool fullyDeployed = false;
-        bool deployed = false;
+        public bool deployed = false;
         private GameObject chute;
         Vector3 targetSize, lastSize;
         float time;

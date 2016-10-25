@@ -154,6 +154,7 @@ namespace VanguardTechnologies
                                 mkkp.minAirPressureToOpen = mkep.minAirPressureToOpen;
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
+                                mkkp.deployed = true;
                                 
                                 //mkkp.rigidbody = this.
 
