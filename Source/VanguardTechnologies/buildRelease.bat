@@ -30,7 +30,7 @@ mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Parts
 mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Sounds
 
-copy /Y "%~dp0bin\Debug\VanguardTechnologies.dll"  %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
+copy /Y "%~dp0bin\Release\VanguardTechnologies.dll"  %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts"
 
 xcopy /y /s "%~dp0..\..\GameData\VNG\Sounds" "%HOMEDIR%\install\GameData\VanguardTechnologies\Sounds"

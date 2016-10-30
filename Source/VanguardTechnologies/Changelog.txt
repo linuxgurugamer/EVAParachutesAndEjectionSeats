@@ -26,3 +26,6 @@
 
 0.1.7
 	Added check for chute deploy, if never deployed, don't do anything
+
+0.1.8
+	Release without debug code
