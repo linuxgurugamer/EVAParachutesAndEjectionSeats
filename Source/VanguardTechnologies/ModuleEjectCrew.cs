@@ -46,7 +46,7 @@ namespace VanguardTechnologies
                     EjectionSound.audio = this.gameObject.AddComponent<AudioSource>();
                     EjectionSound.audio.dopplerLevel = 0f;
                     EjectionSound.audio.Stop();
-                    
+
                     EjectionSound.audio.loop = false;
 
                     //EjectionSound.audio.time = EjectionSound.audio.clip.length;
@@ -62,6 +62,30 @@ namespace VanguardTechnologies
             Log.Info("vessel abort: " + v.name);
             vessel = v;
             lastTime = 0.0;
+        }
+
+        bool FindEjector(Part p, out ModuleKrEjectPilot mkep)
+        {
+            mkep = null;
+            foreach (PartModule m in p.Modules)
+            {
+                if (m.moduleName == "ModuleKrEjectPilot")
+                {
+                    mkep = (ModuleKrEjectPilot)m;
+                    Log.Info("EjectorFound on command pod");
+                    if (mkep.maxUses > 0)
+                    {
+                        //ejectorFound = true;
+                        mkep.maxUses--;
+                        ejectionForce = mkep.ejectionForce;
+                        forceCnt = 60;
+                        Log.Info("Max uses: " + mkep.maxUses.ToString() + "   EjectionForce: " + ejectionForce.ToString());
+                        return true;
+                    }
+
+                }
+            }
+            return false;
         }
 
         void Update()
@@ -83,9 +107,12 @@ namespace VanguardTechnologies
                     continue;
                 }
                 bool ejectorFound = false;
-                
+
                 foreach (Part childp in p.FindChildParts<Part>(false))
                 {
+                    ejectorFound = FindEjector(childp, out mkep);
+                    
+#if false
                     foreach (PartModule m in childp.Modules)
                     {
                         if (m.moduleName == "ModuleKrEjectPilot")
@@ -101,18 +128,47 @@ namespace VanguardTechnologies
                                 Log.Info("Max uses: " + mkep.maxUses.ToString() + "   EjectionForce: " + ejectionForce.ToString());
                                 break;
                             }
-                            
+
                         }
                     }
+#endif
                     if (ejectorFound)
                         break;
                 }
+                // This is for the case where the ejection module has been added to the command pod directly
                 if (!ejectorFound)
                 {
-                    Log.Info("EjectorNot found on command pod");
-                    continue;
+                    // If an ejection part IS mounted, but is usedup, mkep will not be null
+                    // This will give the ability to override a built-in ejection module
+                    if (mkep == null)
+                        ejectorFound = FindEjector(p, out mkep);
+#if false
+                    foreach (PartModule m in p.Modules)
+                    {
+                        if (m.moduleName == "ModuleKrEjectPilot")
+                        {
+                            mkep = (ModuleKrEjectPilot)m;
+                            Log.Info("EjectorFound on command pod");
+                            if (mkep.maxUses > 0)
+                            {
+                                ejectorFound = true;
+                                mkep.maxUses--;
+                                ejectionForce = mkep.ejectionForce;
+                                forceCnt = 60;
+                                Log.Info("Max uses: " + mkep.maxUses.ToString() + "   EjectionForce: " + ejectionForce.ToString());
+                                break;
+                            }
+
+                        }
+                    }
+#endif
+                    if (!ejectorFound)
+                    {
+                        Log.Info("EjectorNot found on command pod");
+                        continue;
+                    }
                 }
-                
+
                 // Look through all the available crew until we find one which can be ejected
 
                 foreach (ProtoCrewMember kerbal in p.protoModuleCrew)
@@ -155,7 +211,7 @@ namespace VanguardTechnologies
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
                                 mkkp.deployed = true;
-                                
+
                                 //mkkp.rigidbody = this.
 
                                 Log.Info("mkep.selectedChute: " + mkep.selectedChute.ToString());
@@ -195,7 +251,7 @@ namespace VanguardTechnologies
                                         // if (!RcsSound.audio.isPlaying)
                                         //RcsSound.audio.Play();
                                     }
-                                   
+
                                 }
 
                                 return;
@@ -228,8 +284,8 @@ namespace VanguardTechnologies
                         if (ejectionForce > 0)
                             ejectedKerbal.rootPart.AddForce(direction * ejectionForce);
                         if (forceCnt-- < 0)
-                        ejectionForce = 0;
-                       // RcsSound.audio.loop = false;
+                            ejectionForce = 0;
+                        // RcsSound.audio.loop = false;
                         if (distance * 2 < Vector3.Distance(ejectedKerbal.rootPart.transform.position, origVessel.rootPart.transform.position))
                             ejectedKerbal = null;
 #else
@@ -286,8 +342,8 @@ namespace VanguardTechnologies
         [KSPField]
         public float deployTime = .33f;
 
-     //   [KSPField]
-      //  public string SoundFile = "VanguardTechnologies/Sounds/ejectionSound";
+        //   [KSPField]
+        //  public string SoundFile = "VanguardTechnologies/Sounds/ejectionSound";
 
         [KSPField]
         public float Volume = 1f;
@@ -315,10 +371,10 @@ namespace VanguardTechnologies
             part.SendEvent("OnDeboardSeat");
             Log.Info("Eject Crew");
         }
-        
 
-        string[] arrChuteNames =        new string[7] { "Round",      "Round 2",     "Round 3",     "Parasail",      "Square",      "Square 3",     "Square 4" };
-        public string[] arrChuteDir =   new string[7] { "roundChute", "roundChute2", "roundChute3", "parasailChute", "squareChute", "squareChute3", "squareChute4" };
+
+        string[] arrChuteNames = new string[7] { "Round", "Round 2", "Round 3", "Parasail", "Square", "Square 3", "Square 4" };
+        public string[] arrChuteDir = new string[7] { "roundChute", "roundChute2", "roundChute3", "parasailChute", "squareChute", "squareChute3", "squareChute4" };
 
 
         void Start()
@@ -344,7 +400,7 @@ namespace VanguardTechnologies
 
             //Set which function run's when changing selection, which options, and the text to display
             //var chooseOption = chooseField.uiControlEditor as UI_ChooseOption;
-            UI_ChooseOption chooseOption =  chooseChute.uiControlEditor as UI_ChooseOption;
+            UI_ChooseOption chooseOption = chooseChute.uiControlEditor as UI_ChooseOption;
             chooseOption.options = Chutes;
             chooseOption.display = arrChuteNames;        //Should be GUInames array
             chooseOption.onFieldChanged = selectChute;
@@ -352,20 +408,28 @@ namespace VanguardTechnologies
         //onFieldChanged action
         private void selectChute(BaseField field, object oldValueObj)
         {
+            Log.Info("selectChute");
             selectedChute = int.Parse(ChooseOption);
             Log.Info("selectedChute: " + selectedChute.ToString());
-           // updateIntake(true);
+            // updateIntake(true);
         }
 
 
         int getNumSeats()
         {
             int cnt;
+            Log.Info("getNumSeats");
             if (HighLogic.LoadedSceneIsEditor && this.part.parent == null)
             {
                 cnt = maxUses;
-            } else
-                cnt = System.Math.Min(this.part.parent.CrewCapacity, maxUses);
+            }
+            else
+            {
+                if (this.part.parent == null)
+                    cnt = System.Math.Min(this.part.CrewCapacity, maxUses);
+                else
+                    cnt = System.Math.Min(this.part.parent.CrewCapacity, maxUses);
+            }
             //Log.Info("Ejector Cnt: " + cnt.ToString());
             return cnt;
 #if false
@@ -418,7 +482,7 @@ namespace VanguardTechnologies
                 return;
 
             if (ejecting)
-            {            
+            {
                 if (maxUses < 0)
                 {
                     part.explode();

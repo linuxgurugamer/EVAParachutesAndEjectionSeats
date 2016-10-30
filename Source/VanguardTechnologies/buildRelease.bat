@@ -32,6 +32,7 @@ mkdir %HOMEDIR%\install\GameData\VanguardTechnologies\Sounds
 
 copy /Y "%~dp0bin\Release\VanguardTechnologies.dll"  %HOMEDIR%\install\GameData\VanguardTechnologies\Plugins
 xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%HOMEDIR%\install\GameData\VanguardTechnologies\Parts"
+copy /y ..\..\GameData\VNG\addEjectionToAll.cfg.patch "%HOMEDIR%\install\GameData\VanguardTechnologies"
 
 xcopy /y /s "%~dp0..\..\GameData\VNG\Sounds" "%HOMEDIR%\install\GameData\VanguardTechnologies\Sounds"
 

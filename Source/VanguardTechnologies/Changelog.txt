@@ -29,3 +29,6 @@
 
 0.1.8
 	Release without debug code
+
+0.1.9
+	Added ability to use a MM patch to add the ejection module to all manned pods without the need for the ejection part

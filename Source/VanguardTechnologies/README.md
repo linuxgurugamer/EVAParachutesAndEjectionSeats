@@ -33,3 +33,11 @@ Research High Altitude Flight for the 3 person Ejection Module
  This is a revivial of the old EVA Parachutes.
  New models have been provided with new art provided by "SpannerMonkey(smce)"
  Old square chute is still included, permission granted by "Kreuzung"
+
+ There is a MM patch file included for those who would like to add the ejection 
+ module to all manned pods without the need for the ejection parts.  The file
+ is called:
+		addEjectionToAll.cfg.patch
+
+To enable this, rename the file to:
+		addEjectionToAll.cfg
