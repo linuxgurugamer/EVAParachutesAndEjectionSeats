@@ -322,7 +322,7 @@ namespace VanguardTechnologies
 
         //mass
         [KSPField]
-        public float baseMass = 0.1f;
+        public float baseMass = 0.05f;
 
         [KSPField]
         public int baseCost = 666;
@@ -452,12 +452,15 @@ namespace VanguardTechnologies
                 // Log.Info("Flight Vessel crew capacity: " + cnt.ToString());
                 return cnt;
 
-            }
 #endif
         }
+        
 
         public float GetModuleMass(float defaultMass, ModifierStagingSituation mss)
         {
+            if (this.part.parent == null)
+                defaultMass = baseMass;
+            //Log.Info("GetModuleMass   defaultMass: " + defaultMass.ToString() + "   baseMass: " + baseMass.ToString() + "  numSeats: " + getNumSeats().ToString());
             return (defaultMass + baseMass * getNumSeats());
         }
 

@@ -32,3 +32,6 @@
 
 0.1.9
 	Added ability to use a MM patch to add the ejection module to all manned pods without the need for the ejection part
+
+0.1.10
+	Fixed the default mass calculation when no parts are being used (ie:  using the MM patch mentioned above)
