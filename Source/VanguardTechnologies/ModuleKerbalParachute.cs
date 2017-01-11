@@ -110,7 +110,14 @@ namespace VanguardTechnologies
         //Log.Info("staticPressureAtm: " + part.staticPressureAtm.ToString() + "  minAirPressureToOpen: " + minAirPressureToOpen.ToString());
         public void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight || !deployed) return;
+            if (!HighLogic.LoadedSceneIsFlight)
+                return;
+            if (!chute && GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
+            {
+                Log.Info("EVA_Use & EVA_Jump");
+                DeploySemi();
+            }
+            if (!deployed) return;
 
             // Once the vertical speed has been reached, set it to 0 so we don't keep the rest from working
             if (vessel.verticalSpeed > minVerticalSpeed)
@@ -147,11 +154,7 @@ namespace VanguardTechnologies
                 chuteState = fullyDeployed ? "fully deployed" : "semi-deployed";
             }
 
-            if (!chute && GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
-            {
-                Log.Info("EVA_Use & EVA_Jump");
-                DeploySemi();
-            }
+           
             if (!fullyDeployed && chute != null)
             {
                 if (vessel.altitude < 200 || (vessel.heightFromTerrain < 200 && vessel.heightFromTerrain != 1))

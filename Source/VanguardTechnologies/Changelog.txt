@@ -35,3 +35,7 @@
 
 0.1.10
 	Fixed the default mass calculation when no parts are being used (ie:  using the MM patch mentioned above)
+
+0.1.11
+	Fixed problem with the Space+F key (Use + jump) not deploying parachute (0.1.5 fix got reverted somehow)
+	Added AssemblyVersion code
