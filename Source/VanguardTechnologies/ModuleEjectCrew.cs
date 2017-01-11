@@ -101,6 +101,7 @@ namespace VanguardTechnologies
             ModuleKrEjectPilot mkep = null;
             foreach (Part p in vessel.parts)
             {
+                Log.Info("part: " + p.partInfo.title);
                 if (p.protoModuleCrew.Count == 0)
                 {
                     Log.Info("nobody inside");
@@ -164,19 +165,22 @@ namespace VanguardTechnologies
 #endif
                     if (!ejectorFound)
                     {
-                        Log.Info("EjectorNot found on command pod");
+                        Log.Info("Ejector Not found on command pod");
                         continue;
                     }
                 }
 
                 // Look through all the available crew until we find one which can be ejected
-
+                Log.Info("look for kerbal to eject");
                 foreach (ProtoCrewMember kerbal in p.protoModuleCrew)
                 {
                     KerbalEVA spawned = FlightEVA.fetch.spawnEVA(kerbal, p, p.airlock, true);
                     if (!spawned)
+                    {
                         // if false, then the exit was blocked by something
                         allSpawned = false;
+                        Log.Info("notSpawned");
+                    }
                     else
                     {
                         spawned.autoGrabLadderOnStart = false;
@@ -425,12 +429,20 @@ namespace VanguardTechnologies
             }
             else
             {
+                int crewCapacity;
                 if (this.part.parent == null)
-                    cnt = System.Math.Min(this.part.CrewCapacity, maxUses);
+                    crewCapacity = this.part.CrewCapacity;
                 else
-                    cnt = System.Math.Min(this.part.parent.CrewCapacity, maxUses);
+                    crewCapacity = this.part.parent.CrewCapacity;
+                
+                if (this.part.Modules.Contains("TakeCommand"))
+                {
+                    crewCapacity = 1;
+                }
+
+                cnt = System.Math.Min(crewCapacity, maxUses);
             }
-            //Log.Info("Ejector Cnt: " + cnt.ToString());
+            Log.Info("Ejector Cnt: " + cnt.ToString());
             return cnt;
 #if false
             int cnt = 0;

@@ -39,10 +39,12 @@ namespace VanguardTechnologies
             closedDrag = part.maximum_drag;
         }
 
-        [KSPEvent(guiActive = true, guiName = "fully deploy parachute")]
+        [KSPEvent(guiActive = true, guiName = "Fully deploy parachute")]
         public void DeployFully()
         {
             if (chute && fullyDeployed) return;
+            if (!deployWhenAble && !chute && checkForRagdoll())
+                return;
             if (part.staticPressureAtm < minAirPressureToOpen)
             {
                 Log.Info("Air pressure too low for EVA parachute");
@@ -56,10 +58,12 @@ namespace VanguardTechnologies
             targetSize = new Vector3(1, 1, 1);
         }
 
-        [KSPEvent(guiActive = true, guiName = "semi-deploy parachute")]
+        [KSPEvent(guiActive = true, guiName = "Semi-deploy parachute")]
         public void DeploySemi()
         {
             if (chute) return;
+            if (!deployWhenAble && checkForRagdoll())
+                return;
             if (part.staticPressureAtm < minAirPressureToOpen)
             {
                 Log.Info("Air pressure too low for EVA parachute");
@@ -105,6 +109,24 @@ namespace VanguardTechnologies
             lastSize = chute.transform.localScale;
         }
 
+        bool checkForRagdoll(bool display = true)
+        {
+            KerbalEVA kEVA = this.vessel.gameObject.GetComponentInChildren<KerbalEVA>();
+            if (kEVA)
+            {
+                Log.Info("KerbalEVA found");
+                if (kEVA.isRagdoll)
+                {
+                    Log.Info("Kerbal is ragdoll: " + this.vessel.name);
+                    if (display)
+                        ScreenMessages.PostScreenMessage("Kerbal " + this.vessel.name + " is unconcious, unable to deploy parachute", 3, ScreenMessageStyle.UPPER_CENTER);
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+
         //  bool i = false;
         //  double degree = 0;
         //Log.Info("staticPressureAtm: " + part.staticPressureAtm.ToString() + "  minAirPressureToOpen: " + minAirPressureToOpen.ToString());
@@ -114,8 +136,11 @@ namespace VanguardTechnologies
                 return;
             if (!chute && GameSettings.EVA_Use.GetKey() && GameSettings.EVA_Jump.GetKey())
             {
+                if (checkForRagdoll())
+                    return;
+ 
                 Log.Info("EVA_Use & EVA_Jump");
-                DeploySemi();
+                DeploySemi();  
             }
             if (!deployed) return;
 

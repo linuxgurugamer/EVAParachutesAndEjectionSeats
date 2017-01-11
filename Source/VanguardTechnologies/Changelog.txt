@@ -39,3 +39,7 @@
 0.1.11
 	Fixed problem with the Space+F key (Use + jump) not deploying parachute (0.1.5 fix got reverted somehow)
 	Added AssemblyVersion code
+
+0.1.12
+	Added code to check for unconcious kerbal.  If a kerbl was EVA and then knocked unconcious, the parachute will NOT 
+	deploy, and a message will be displayed
