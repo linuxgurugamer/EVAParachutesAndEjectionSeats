@@ -34,6 +34,7 @@ copy /Y "%~dp0bin\Debug\VanguardTechnologies.dll" "%H%\GameData\VanguardTechnolo
 copy /Y MiniAVC.dll  "%H%\GameData\VanguardTechnologies"
 xcopy /y /s "%~dp0..\..\GameData\VNG\Parts" "%H%\GameData\VanguardTechnologies\Parts"
 xcopy /y /s "%~dp0..\..\GameData\VNG\Sounds" "%H%\GameData\VanguardTechnologies\Sounds"
+copy /y "%~dp0..\..\GameData\VNG\FAR_patch.cfg" "%H%\GameData\VanguardTechnologies"
 
 copy /Y "EVAParachutesAndEjectionSeats.version" "%H%\GameData\VanguardTechnologies"
 

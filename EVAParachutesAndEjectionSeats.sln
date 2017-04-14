@@ -5,6 +5,14 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanguardTechnologies", "Source\VanguardTechnologies\VanguardTechnologies.csproj", "{EC925528-7C6F-4B72-BD2C-73B1B8627421}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{E26FE0F1-A424-4B28-8F68-A8DD28BA1ACC}"
+	ProjectSection(SolutionItems) = preProject
+		Source\VanguardTechnologies\buildRelease.bat = Source\VanguardTechnologies\buildRelease.bat
+		Source\VanguardTechnologies\Changelog.txt = Source\VanguardTechnologies\Changelog.txt
+		Source\VanguardTechnologies\deploy.bat = Source\VanguardTechnologies\deploy.bat
+		Source\VanguardTechnologies\EVAParachutesAndEjectionSeats.version = Source\VanguardTechnologies\EVAParachutesAndEjectionSeats.version
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

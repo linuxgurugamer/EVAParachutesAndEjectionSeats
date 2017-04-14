@@ -214,6 +214,8 @@ namespace VanguardTechnologies
                                 mkkp.minAirPressureToOpen = mkep.minAirPressureToOpen;
                                 mkkp.semiDeployedFraction = mkep.semiDeployedFraction;
                                 mkkp.deployTime = mkep.deployTime;
+                                mkkp.deployHeight = mkep.deployHeight;
+                                Log.Info("Update.deployHeight: " + mkep.deployHeight.ToString());
                                 mkkp.deployed = true;
 
                                 //mkkp.rigidbody = this.
@@ -323,6 +325,9 @@ namespace VanguardTechnologies
         [KSPField(guiActiveEditor = true, guiName = "Min Pressure", isPersistant = true),
             UI_FloatRange(minValue = 0.01f, maxValue = 1f, stepIncrement = 0.01f)]
         public float minAirPressureToOpen = 0.04f;
+
+        [KSPField]
+        public int deployHeight = 200;
 
         //mass
         [KSPField]

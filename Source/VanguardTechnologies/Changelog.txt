@@ -43,3 +43,9 @@
 0.1.12
 	Added code to check for unconcious kerbal.  If a kerbl was EVA and then knocked unconcious, the parachute will NOT 
 	deploy, and a message will be displayed
+
+0.1.13
+	Added deployHeight configurable value
+	Added MM patch for FAR, to set the deployHeight to 700
+	Fixed issue with chute animation when very far in the future
+	

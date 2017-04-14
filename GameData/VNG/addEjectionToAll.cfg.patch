@@ -12,6 +12,7 @@
 		%semiDeployedFraction = 0.25
 		%semiDeployedHeight = 1.25
 		%deployTime = 0.33
+		%deployHeight = 200
 		%Soundfile = VanguardTechnologies/Sounds/ejectionSound
 		%Volume = 1
 	}

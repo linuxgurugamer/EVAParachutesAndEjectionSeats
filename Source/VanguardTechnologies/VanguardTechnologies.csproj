@@ -58,9 +58,6 @@
     <Compile Include="Tosh_ShaderReplacer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="buildRelease.bat" />
-    <None Include="deploy.bat" />
-    <None Include="EVAParachutesAndEjectionSeats.version" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -68,7 +65,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
     </Content>
-    <Content Include="Changelog.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -12,11 +12,14 @@ namespace VanguardTechnologies
         [KSPField(isPersistant = true)]
         public float deployedDrag = 100, closedDrag, minAirPressureToOpen = 0.01f, semiDeployedFraction = .25f, semiDeployedHeight = 1.25f, deployTime = .33f;
 
+        [KSPField(isPersistant = true)]
+        public int deployHeight = 200;
+
         public bool fullyDeployed = false;
         public bool deployed = false;
         private GameObject chute;
         Vector3 targetSize, lastSize;
-        float time;
+        double time;
         private bool deployWhenAble = false;
         int waitBeforeCheckingSrvVel = 0;
         int deployDelay = 0;
@@ -55,7 +58,10 @@ namespace VanguardTechnologies
             fullyDeployed = true;
             deployed = true;
             waitBeforeCheckingSrvVel = 30;
+           
             targetSize = new Vector3(1, 1, 1);
+            //time = (float)Planetarium.GetUniversalTime(); // - semiDeployedFraction;
+            
         }
 
         [KSPEvent(guiActive = true, guiName = "Semi-deploy parachute")]
@@ -75,6 +81,7 @@ namespace VanguardTechnologies
             deployed = true;
             waitBeforeCheckingSrvVel = 500;
             targetSize = new Vector3(semiDeployedFraction, semiDeployedFraction, semiDeployedHeight);
+            
         }
 
         public void DeployWhenAble(PartModule.StartState state, Vessel vessel, string k)
@@ -182,13 +189,15 @@ namespace VanguardTechnologies
            
             if (!fullyDeployed && chute != null)
             {
-                if (vessel.altitude < 200 || (vessel.heightFromTerrain < 200 && vessel.heightFromTerrain != 1))
+                Log.Info("FixedUpdate.deployHeight: " + deployHeight.ToString() + "   vessel.heightFromTerrain: " + vessel.heightFromTerrain.ToString());
+                if (vessel.altitude < deployHeight || (vessel.heightFromTerrain < deployHeight && vessel.heightFromTerrain != 1))
                     DeployFully();
                 else DeploySemi();
             }
             if (chute)
             {
-                float t = ((float)Planetarium.GetUniversalTime() - time) / deployTime;
+                float t = (float)((Planetarium.GetUniversalTime() - time) / (double)deployTime );
+                Log.Info("time: " + time.ToString() + "    Planetarium.GetUniversalTime(): " + Planetarium.GetUniversalTime().ToString() + "   deployTime: " + deployTime.ToString() + "     t: " + t.ToString());
                 if (t < 1)
                     chute.transform.localScale = Vector3.Lerp(lastSize, targetSize, t);
                 else
