@@ -1,0 +1,4 @@
+VanguardTechnologies.dll and it's source code is licensed under the Creative Commons Attribution 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/.
+Note that most source files do not contain copyright information, these have been written by me, Julius Wachtendorf (Kreuzung). Other authors are attributed in code comments.
+
+FrementGUILib.dll and the icons in the FrementGUILib folder have been created by Frement and are free to use for anyone, public domain and stuff like that... just STFU and claim it's yours! :P
