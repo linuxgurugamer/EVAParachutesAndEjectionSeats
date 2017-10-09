@@ -1,26 +1,26 @@
 ﻿{
   "NAME": "EVAParachutesAndEjectionSeats",
-  "URL": "http://ksp-avc.cybutek.net/version.php?id=354",
+  "URL": "https://raw.githubusercontent.com/linuxgurugamer/EVAParachutesAndEjectionSeats/master/Source/VanguardTechnologies/EVAParachutesAndEjectionSeats.version",
   "DOWNLOAD": "https://github.com/linuxgurugamer/EVAParachutesAndEjectionSeats/releases",
   "VERSION": {
     "MAJOR": 0,
     "MINOR": 1,
-    "PATCH": 14,
+    "PATCH": 15,
     "BUILD": 0
   },
   "KSP_VERSION": {
     "MAJOR": 1,
     "MINOR": 3,
-    "PATCH": 0
+    "PATCH": 1
   },
   "KSP_VERSION_MIN": {
     "MAJOR": 1,
     "MINOR": 3,
-    "PATCH": 0
+    "PATCH": 1
   },
   "KSP_VERSION_MAX": {
     "MAJOR": 1,
     "MINOR": 3,
-    "PATCH": 99
+    "PATCH": 1
   }
 }
