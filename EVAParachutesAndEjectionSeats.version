@@ -1,26 +1,31 @@
 ﻿{
   "NAME": "EVAParachutesAndEjectionSeats",
-  "URL": "https://raw.githubusercontent.com/linuxgurugamer/EVAParachutesAndEjectionSeats/master/Source/VanguardTechnologies/EVAParachutesAndEjectionSeats.version",
+  "URL": "https://raw.githubusercontent.com/linuxgurugamer/EVAParachutesAndEjectionSeats/master/Source/EVAParachutesAndEjectionSeats.version",
   "DOWNLOAD": "https://github.com/linuxgurugamer/EVAParachutesAndEjectionSeats/releases",
+  "GITHUB" :
+  {
+      "USERNAME" : "linuxgurugamer",
+      "REPOSITORY" : "EVAParachutesAndEjectionSeats"
+  },
   "VERSION": {
     "MAJOR": 0,
     "MINOR": 1,
     "PATCH": 15,
-    "BUILD": 1
+    "BUILD": 2
   },
   "KSP_VERSION": {
     "MAJOR": 1,
-    "MINOR": 3,
+    "MINOR": 4,
     "PATCH": 1
   },
   "KSP_VERSION_MIN": {
     "MAJOR": 1,
-    "MINOR": 3,
+    "MINOR": 4,
     "PATCH": 1
   },
   "KSP_VERSION_MAX": {
     "MAJOR": 1,
-    "MINOR": 3,
-    "PATCH": 1
+    "MINOR": 4,
+    "PATCH": 99
   }
 }
