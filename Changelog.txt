@@ -60,4 +60,8 @@
     Added Jenkins config
     Reorganized directories
 
+0.1.15.2
+	Fixed version file
 	
+0.1.15.3
+	Version bump for 1.5 rebuild
