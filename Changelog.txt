@@ -65,3 +65,6 @@
 	
 0.1.15.3
 	Version bump for 1.5 rebuild
+
+0.1.15.4
+	Removed code which inserted module at runtime and replaced with MM script

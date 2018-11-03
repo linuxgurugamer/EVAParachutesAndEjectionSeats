@@ -1,4 +1,5 @@
-
+#if false
+// replaced with MM script
 namespace EVAParachutes
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -25,3 +26,4 @@ namespace EVAParachutes
         }
     }
 }
+#endif
