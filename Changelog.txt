@@ -68,3 +68,6 @@
 
 0.1.15.4
 	Removed code which inserted module at runtime and replaced with MM script,  This also fixed the mod for the kerbals in the expansion pack
+
+0.1.16
+	Added missing bulkheadProfiles
