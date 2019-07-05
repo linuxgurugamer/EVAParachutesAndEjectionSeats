@@ -71,3 +71,7 @@
 
 0.1.16
 	Added missing bulkheadProfiles
+
+0.1.17
+	Version bump for 1.7.2
+
