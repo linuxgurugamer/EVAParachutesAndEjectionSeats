@@ -1,4 +1,7 @@
-﻿1.2 prerelease
+﻿ChangeLog
+
+1.2
+	prerelease
 
 0.1.0
 	Initial release
@@ -82,3 +85,6 @@
 
 0.2.0.1
 	Updated MiniAVC.dll to 1.4.0.2 to fix a nasty CTD
+
+0.2.0.2
+	Really did the MiniAVC update
