@@ -88,3 +88,8 @@
 
 0.2.0.2
 	Really did the MiniAVC update
+
+0.2.0.3
+	Renamed DLL for CKAN compatibility
+	Added AssemblyFileVersion
+	Updated version file for 1.12
