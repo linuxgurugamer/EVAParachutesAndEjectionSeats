@@ -385,6 +385,9 @@ namespace VanguardTechnologies
         string[] arrChuteNames = new string[7] { "Round", "Round 2", "Round 3", "Parasail", "Square", "Square 3", "Square 4" };
         public string[] arrChuteDir = new string[7] { "roundChute", "roundChute2", "roundChute3", "parasailChute", "squareChute", "squareChute3", "squareChute4" };
 
+        //string[] arrChuteNames = new string[6] { "Round", "Round 2", "Round 3", "Square", "Square 3", "Square 4" };
+        //public string[] arrChuteDir = new string[6] { "roundChute", "roundChute2", "roundChute3", "squareChute", "squareChute3", "squareChute4" };
+
 
         void Start()
         {
@@ -414,6 +417,7 @@ namespace VanguardTechnologies
             chooseOption.display = arrChuteNames;        //Should be GUInames array
             chooseOption.onFieldChanged = selectChute;
         }
+
         //onFieldChanged action
         private void selectChute(BaseField field, object oldValueObj)
         {
@@ -478,7 +482,7 @@ namespace VanguardTechnologies
             if (this.part.parent == null)
                 defaultMass = baseMass;
             //Log.Info("GetModuleMass   defaultMass: " + defaultMass.ToString() + "   baseMass: " + baseMass.ToString() + "  numSeats: " + getNumSeats().ToString());
-            return (defaultMass + baseMass * getNumSeats());
+            return (baseMass * getNumSeats());
         }
 
         public ModifierChangeWhen GetModuleMassChangeWhen()
@@ -488,7 +492,7 @@ namespace VanguardTechnologies
 
         public float GetModuleCost(float defaultCost, ModifierStagingSituation mss)
         {
-            return (defaultCost + baseCost * getNumSeats());
+            return (baseCost * getNumSeats());
         }
 
         public ModifierChangeWhen GetModuleCostChangeWhen()

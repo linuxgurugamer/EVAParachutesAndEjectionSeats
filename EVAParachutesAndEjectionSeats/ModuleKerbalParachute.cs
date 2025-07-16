@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace VanguardTechnologies
 {
@@ -58,10 +54,10 @@ namespace VanguardTechnologies
             fullyDeployed = true;
             deployed = true;
             waitBeforeCheckingSrvVel = 30;
-           
+
             targetSize = new Vector3(1, 1, 1);
             //time = (float)Planetarium.GetUniversalTime(); // - semiDeployedFraction;
-            
+
         }
 
         [KSPEvent(guiActive = true, guiName = "Semi-deploy parachute")]
@@ -81,7 +77,7 @@ namespace VanguardTechnologies
             deployed = true;
             waitBeforeCheckingSrvVel = 500;
             targetSize = new Vector3(semiDeployedFraction, semiDeployedFraction, semiDeployedHeight);
-            
+
         }
 
         public void DeployWhenAble(PartModule.StartState state, Vessel vessel, string k)
@@ -145,12 +141,11 @@ namespace VanguardTechnologies
             {
                 if (checkForRagdoll())
                     return;
- 
+
                 Log.Info("EVA_Use & EVA_Jump");
-                DeploySemi();  
+                DeploySemi();
             }
             if (!deployed) return;
-
             // Once the vertical speed has been reached, set it to 0 so we don't keep the rest from working
             if (vessel.verticalSpeed > minVerticalSpeed)
                 return;
@@ -160,6 +155,22 @@ namespace VanguardTechnologies
             // Don't deploy if speed >150
             if (vessel.srf_velocity.magnitude > 150)
                 return;
+
+            if (parasail)
+            {
+                ModuleEvaChute m = vessel.FindPartModuleImplementing<ModuleEvaChute>();
+                Log.Info("m.CanCrewMemberUseParachute: " + m.CanCrewMemberUseParachute());
+                if (m.CanCrewMemberUseParachute())
+                {
+                    ModuleInventoryPart mPI = part.GetComponent<ModuleInventoryPart>();
+                    if (mPI.ContainsPart("evaChute"))
+                    {
+                        m.Deploy();
+                        return;
+                    }
+                }
+            }
+
 
             Log.Info("FixedUpdate, name: " + this.vessel.name +
                 "  deployWhenAble: " + deployWhenAble.ToString() + "  part.staticPressureAtm: " + part.staticPressureAtm.ToString() + "  minAirPressureToOpen" + minAirPressureToOpen.ToString());
@@ -186,7 +197,7 @@ namespace VanguardTechnologies
                 chuteState = fullyDeployed ? "fully deployed" : "semi-deployed";
             }
 
-           
+
             if (!fullyDeployed && chute != null)
             {
                 Log.Info("FixedUpdate.deployHeight: " + deployHeight.ToString() + "   vessel.heightFromTerrain: " + vessel.heightFromTerrain.ToString());
@@ -196,7 +207,7 @@ namespace VanguardTechnologies
             }
             if (chute)
             {
-                float t = (float)((Planetarium.GetUniversalTime() - time) / (double)deployTime );
+                float t = (float)((Planetarium.GetUniversalTime() - time) / (double)deployTime);
                 Log.Info("time: " + time.ToString() + "    Planetarium.GetUniversalTime(): " + Planetarium.GetUniversalTime().ToString() + "   deployTime: " + deployTime.ToString() + "     t: " + t.ToString());
                 if (t < 1)
                     chute.transform.localScale = Vector3.Lerp(lastSize, targetSize, t);
@@ -204,7 +215,7 @@ namespace VanguardTechnologies
                     chute.transform.localScale = targetSize;
 
                 //chute.transform.localScale = new Vector3(0.55f, 0.55f, semiDeployedHeight); // test
-                
+
                 Log.Info("part.mass: " + part.mass.ToString() + "   part.physicsMass:  " + part.physicsMass.ToString());
                 part.maximum_drag = chute.transform.localScale.x * chute.transform.localScale.y * deployedDrag;
                 //                part.minimum_drag = part.maximum_drag;
@@ -214,8 +225,8 @@ namespace VanguardTechnologies
                 //                Deploy();
                 //                deploymentState = deploymentStates.DEPLOYED;
 
-                
-                Vector3 skywardsDirection =  -1 *vessel.srf_velocity;
+
+                Vector3 skywardsDirection = -1 * vessel.srf_velocity;
 
                 float force = (float)(FlightGlobals.ActiveVessel.mainBody.GeeASL * 9.81 * part.physicsMass * chute.transform.localScale.x);
                 // Following to smooth the descent speed
@@ -224,12 +235,12 @@ namespace VanguardTechnologies
                     if (vessel.srf_velocity.magnitude > 20)
                         force *= 2;
                     if (vessel.srf_velocity.magnitude > 5 && vessel.srf_velocity.magnitude <= 20)
-                        force = Mathf.Lerp(force * 2, force, (float)vessel.srf_velocity.magnitude / 15);
+                        force = Mathf.Lerp(force * 2, force, (float)vessel.srf_velocity.magnitude / 10);
                     if (vessel.srf_velocity.magnitude < 5)
                         force -= 0.1f;
                 }
                 Log.Info("force: " + force.ToString() + "  FlightGlobals.ActiveVessel.mainBody.GeeASL: " + FlightGlobals.ActiveVessel.mainBody.GeeASL.ToString() + "  part.physicsMass: " + part.physicsMass.ToString() + "  chute.transform.localScale.x: " + chute.transform.localScale.x.ToString());
-                vessel.rootPart.Rigidbody.AddForce(skywardsDirection.normalized * force );
+                vessel.rootPart.Rigidbody.AddForce(skywardsDirection.normalized * force);
 
                 Log.Info("maximum_drag: " + part.maximum_drag.ToString() + "   deployedDrag: " + deployedDrag.ToString());
                 Log.Info("parasail: " + parasail.ToString());
@@ -242,11 +253,12 @@ namespace VanguardTechnologies
                 //this.sqrSpeed = velocity.sqrMagnitude;
                 //Vector3 dragVector = -velocity.normalized;
 
-                if (parasail)
+
+                if (parasail && false)
                 {
                     //if (!i && t > 1)
                     //{
-                       // chute.transform.Rotate(180 - FlightGlobals.ship_heading, 90, 0, Space.World);
+                    // chute.transform.Rotate(180 - FlightGlobals.ship_heading, 90, 0, Space.World);
                     //    i = true;
                     //}
                     //degree += 0.5;
@@ -278,16 +290,16 @@ namespace VanguardTechnologies
                     // chute.transform.parent = transform;
                     // chute.transform.localPosition = new Vector3(0, 0.1f, -0.2f);
                     //chute.transform.eulerAngles = new Vector3(chute.transform.eulerAngles.x, vessel.rootPart.transform.eulerAngles.y, chute.transform.eulerAngles.z);
-                //    Quaternion target = Quaternion.identity;
+                    //    Quaternion target = Quaternion.identity;
 
-                 //   target = Quaternion.LookRotation(this.vessel.srf_velocity);
-                //    Vector3d relativeTargetFacing = Quaternion.Inverse(this.vessel.transform.rotation)  * Vector3d.forward;
+                    //   target = Quaternion.LookRotation(this.vessel.srf_velocity);
+                    //    Vector3d relativeTargetFacing = Quaternion.Inverse(this.vessel.transform.rotation)  * Vector3d.forward;
 
                     // target = Quaternion.AngleAxis(hdgAngle, target * Vector3.up) * target; // heading rotation
                     // target = Quaternion.AngleAxis(pitchAngle, target * -Vector3.right) * target; // pitch rotation
 
                     //chute.transform.localRotation = target;
-                  //  chute.transform.rotation = Quaternion.Euler(relativeTargetFacing);
+                    //  chute.transform.rotation = Quaternion.Euler(relativeTargetFacing);
                 }
 #endif
                 //var tt = vessel.transform.TransformDirection(Vector3.forward);
@@ -299,9 +311,9 @@ namespace VanguardTechnologies
                 Log.Info("vessel.srf_velocity.z: " + vessel.srf_velocity.z.ToString());
 
 
-                if (parasail)
+                if (parasail && false)
                 {
-                    var s = Vector3.left;
+                    var s = Vector3.forward;
                     s.x = 0.1f;
                     s = -1 * s;
                     //s.x = 0;
