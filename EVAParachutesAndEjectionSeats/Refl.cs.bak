@@ -1,5 +1,4 @@
-using KSP.Localization;
-using System;
+﻿using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ namespace VanguardTechnologies
                     return FI;
                 c++;
             }
-            throw new Exception(Localizer.Format("#LOC_EVAChutes_19") + obj.GetType() + "#" + fieldNum.ToString());
+            throw new Exception("No such field: " + obj.GetType() + "#" + fieldNum.ToString());
         }
         public static object GetValue(object obj, int fieldNum)
         {
@@ -30,7 +29,7 @@ namespace VanguardTechnologies
 #if false
 		public static FieldInfo GetField(object obj, string name) {
 			var f = obj.GetType().GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-			if(f == null) throw new Exception(Localizer.Format("#LOC_EVAChutes_19") + obj.GetType() + "#" + name);
+			if(f == null) throw new Exception("No such field: " + obj.GetType() + "#" + name);
 			return f;
 		}
 		public static object GetValue(object obj, string name) {
@@ -53,7 +52,7 @@ namespace VanguardTechnologies
                 c++;
             }
 
-            throw new Exception(Localizer.Format("#LOC_EVAChutes_20") + obj.GetType() + "#" + methodnum);
+            throw new Exception("No such method: " + obj.GetType() + "#" + methodnum);
         }
         public static object Invoke(object obj, int methodnum, params object[] args)
         {
@@ -63,7 +62,7 @@ namespace VanguardTechnologies
 #if false
 		public static MethodInfo GetMethod(object obj, string name) {
 			var m = obj.GetType().GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-			if(m == null) throw new Exception(Localizer.Format("#LOC_EVAChutes_20") + obj.GetType() + "#" + name);
+			if(m == null) throw new Exception("No such method: " + obj.GetType() + "#" + name);
 			return m;
 		}
 		public static object Invoke(object obj, string name, params object[] args) {

@@ -99,3 +99,6 @@
 	Fixed the costs and mass calcuations (thanks to github user @DRVeyl for pointing this out)
 	Added code to use stock EVA chute if available and usable
 	Fixed parasail being angled incorrectly.  It doesn't parasail anymore, but works as a chute
+
+0.2.1.1
+	Localized the mod

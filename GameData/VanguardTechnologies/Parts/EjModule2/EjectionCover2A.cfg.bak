@@ -1,12 +1,12 @@
-PART
+﻿PART
 {
 	// --- general parameters ---
-	name = EjectionModule
+	name = EjectionCover2A
 	module = Part
 	author = Spanner
 
 	// --- asset parameters ---
-	mesh = EjectionModule.mu
+	mesh = EjectionCover2A.mu
 	scale = 1
 	
 	rescaleFactor = 1
@@ -16,14 +16,14 @@ PART
 	node_attach = -0.0, 0.0, -0.00, 0.0, 0.0, -1.0
 
 	// --- editor parameters ---
-	TechRequired = supersonicFlight
+	TechRequired = highAltitudeFlight
 	entryCost = 616
-	cost = 666
+	cost = 400
 	category = Utility
 	subcategory = 0
-	title = #LOC_EVAChutes_21
+	title = Seat Ejection Cover 2A
 	manufacturer = 
-	description = #LOC_EVAChutes_22
+	description =  Seat Ejection Module.  Add this module to any command pod enable the crew pilot ejection feature for up to 3 crew members FROM THAT POD.  Parachute will auto-deploy once it is safe to do so.  Crew will be ejected from the nearest available, unobstructed hatch.  You can add multiple modules for more ejection seats.
 
 	// attachment rules: stack, srfAttach, allowStack, allowSrfAttach, allowCollision
 	attachRules = 0,1,0,0,1
@@ -42,16 +42,18 @@ PART
 	MODULE
 	{
 		name = ModuleAnimationGroup
-		deployAnimationName = EJarmed
-		activeAnimationName = EJfire
+		deployAnimationName = EJarmed2
+		activeAnimationName = EJfire2
+		//deployActionName = Activate
+//retractActionName = Deactivate
+        
 		moduleType = EjectionModule
 	}
-
 	MODULE
 	{
 		name = ModuleKrEjectPilot
 		ejectionForce = 100
-		maxUses = 1
+		maxUses = 3
 		baseCost = 666
 		baseMass = 0.1
 		

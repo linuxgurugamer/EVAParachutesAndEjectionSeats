@@ -1,5 +1,4 @@
-using KSP.Localization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -387,7 +386,7 @@ namespace VanguardTechnologies
         }
 
 
-        string[] arrChuteNames = new string[7] { "#LOC_EVAChutes_1", "#LOC_EVAChutes_2", "#LOC_EVAChutes_3", "#LOC_EVAChutes_4", "#LOC_EVAChutes_5", "#LOC_EVAChutes_6", "#LOC_EVAChutes_7" };
+        string[] arrChuteNames = new string[7] { "Round", "Round 2", "Round 3", "Parasail", "Square", "Square 3", "Square 4" };
         public string[] arrChuteDir = new string[7] { "roundChute", "roundChute2", "roundChute3", "parasailChute", "squareChute", "squareChute3", "squareChute4" };// NO_LOCALIZATION
 
         //string[] arrChuteNames = new string[6] { "Round", "Round 2", "Round 3", "Square", "Square 3", "Square 4" };
@@ -404,7 +403,7 @@ namespace VanguardTechnologies
             Log.Info("SetupGUI");
             //Update the gui
             chooseChute = Fields[nameof(ChooseOption)];
-            chooseChute.guiName = Localizer.Format("#LOC_EVAChutes_8");     //Dummy name until updated
+            chooseChute.guiName = "Chute";     //Dummy name until updated
             chooseChute.guiActiveEditor = true;
             chooseChute.guiActive = false;
 
@@ -525,8 +524,8 @@ namespace VanguardTechnologies
 
         public override string GetInfo()
         {
-            string desc = Localizer.Format("#LOC_EVAChutes_9");
-            if (maxUses > 0) desc += Localizer.Format("#LOC_EVAChutes_10") + maxUses + Localizer.Format("#LOC_EVAChutes_11");
+            string desc = "Has ejection capability";
+            if (maxUses > 0) desc += " for " + maxUses + " crew members";
             return desc;
         }
     }
